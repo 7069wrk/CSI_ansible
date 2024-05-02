@@ -1,0 +1,19 @@
+---
+
+- hosts: 127.0.0.1
+  connection: local
+  become: true
+  tasks:
+  - name: update package cache
+    apt:
+      update_cache: yes
+  - name: upgrade all packages
+    apt:
+      upgrade: yes
+      install-recommends: yes
+
+#optional: autoremove
+  - name: remove unused packages (optional)
+    apt:
+      autoremove: yes
+    when: ansible_os_family == "Debian"
