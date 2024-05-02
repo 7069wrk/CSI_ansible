@@ -1,0 +1,23 @@
+---
+
+- hosts: 127.0.0.1
+  connection: local
+  become: true
+
+  tasks:
+  - name: check if vmware tools installed
+    vmware_guest_info:
+      gather_facts: no
+    register: vmware_info
+
+  - name: install open-vm-tools
+    apt:
+      name: open-vm-tools
+      state: present
+    when: not vmware_info.guest.toolsVersionInstalled
+
+  - name: reload virtual modules (optional)
+    vmware_guest_module:
+      name: all
+      state: reload
+    when: vmware_info.guest.toolsVersionInstalled
