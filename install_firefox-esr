@@ -1,0 +1,33 @@
+---
+
+- hosts: 127.0.0.1
+  connection: local
+  become: true
+
+  #vars:
+  #  ansible_user: 'csi'
+
+  vars_prompt:
+    - name: "ansible_user"
+      prompt: "default user"
+      private: yes
+
+  tasks:
+  - name: Add PPA repository
+    apt_repository:
+      repo: ppa:mozillateam/ppa
+      state: present
+
+  - name: update package cache
+    apt:
+      update_cache: yes
+
+  - name: Install Firefox ESR
+    apt:
+      name: firefox-esr
+      state: present
+
+  - name: present ansible user
+    debug:
+      msg: "{{ansible_user}}"
+
